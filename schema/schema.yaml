@@ -1,0 +1,170 @@
+openapi: 3.0.0
+info:
+  version: '0.0.1'
+  title: 'The metering API'
+  description: 'Schema for metering API'
+components:
+  schemas:
+    error: 
+      type: object
+      description: An error object type
+      required:
+        - error
+        - errorMessage
+      properties:
+        error:
+          type: boolean
+          description: Boolean to state if error has occurred.
+        errorMessage:
+          required:
+            - message
+          type: object
+          properties:
+            message:
+              type: string
+            secondaryMessage:
+              type: string  
+    period:
+      type: string
+      default: last_month
+      enum:
+        - last_month
+        - last_week
+        - last_two_Weeks
+        - previous_day
+        - custom
+paths: 
+  /meters: 
+    get: 
+      summary: Get a list of all the meters present on the system.
+      parameters: 
+        - name: searchById
+          description: Query string to find meter by ID
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON array of meter IDs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [
+                    meterId,
+                    firstRecordedReadingDate,
+                    lastRecordedReadingDate
+                  ]
+                  properties:
+                    meterId:
+                      type: string
+                      description: The ID of the given meter
+                    firstRecordedReadingUnixTimestamp:
+                      type: string
+                      description: Unix timestamp representing the date and time from which reading are avaliable in the system.
+                    lastRecordedReadingUnixTimestamp:
+                      type: string
+                      description: Unix timestamp representing the last date and time on which reading was recorded in the system. 
+                    
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /meters/{meterId}:
+    get:
+      summary: Get the metering data for a meter. 
+      parameters:
+        - name: meterId
+          description: The meter for which to obtain the data.
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: period
+          description: The time period for which the data has to be obtained.
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/period"
+        - name: customPeriodStartTimestamp
+          required: false
+          description:  If period is selected as custom, this parameter is used to specify the 
+                        start date and time as unix timestamp in seconds of the custom period for 
+                        which you want to receive the metering data. This parameter will be 
+                        ignored if any other option is selected except "custom" for the "period" parameter.
+          in: query
+          schema:
+            type: string
+        - name: customPeriodEndTimestamp
+          required: false
+          description:  If "period" is selected as "custom", this parameter is used to specify the 
+                        end date and time as unix timestamp in seconds of the custom period for 
+                        which you want to receive the metering data. This parameter will be 
+                        ignored if any other option is selected except "custom" for the "period" parameter.
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: JSON response containing metering data for the requested time period.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [
+                  meterId,
+                  period,
+                  startTimestamp,
+                  endTimestamp,
+                  readings
+                ]
+                properties:
+                  meterId: 
+                    type: string
+                    description: The ID of the meter for which the data was requested.
+                  period:
+                    $ref: "#/components/schemas/period"
+                  startTimestamp:
+                    type: string
+                    description: Unix timestamp in seconds marking the start date and time from which the data is avaliable.
+                  endTimestamp:
+                    type: string
+                    description: Unix timestamp in seconds marking the end date and time for the metering data.
+                  readings:
+                    type: array
+                    items:
+                      type: object
+                      description: An instance of meter reading on a given time.
+                      properties:
+                        readingTimestampUnix: 
+                          type: string
+                          description: The unix timestamp in seconds representing the date and time when the reading was take.
+                        wattHour:
+                          type: number
+                          description: The watt-hour reading from the meter.
+                        varh:
+                          type: number
+                          description: The VARh or Volt Ampere Hour Reactive reading from the meter. 
+        "404":
+          description: Meter with specified ID not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        "400":
+          description: Invalid request parameter provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
