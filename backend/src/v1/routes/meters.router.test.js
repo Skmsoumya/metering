@@ -43,4 +43,23 @@ describe('Meters endpoint', () => {
       expect(res.body[0].latestWHReading).not.toBeUndefined()
     }
   })
+
+  it('Should accept a search parameter and filter the list of meters accordingly', async () => {
+    const meterId = 'METER000001'
+    const res = await request(app)
+      .get(`/meters?searchById=${meterId}`)
+      .send()
+
+    expect(res.body.length).toBe(1)
+    expect(res.body[0].serial).toBe(meterId)
+  })
+
+  it('Should return an empty array when there is no meter with specified ID in the system', async () => {
+    const meterId = 'METER000012'
+    const res = await request(app)
+      .get(`/meters?searchById=${meterId}`)
+      .send()
+
+    expect(res.body.length).toBe(0)
+  })
 })
