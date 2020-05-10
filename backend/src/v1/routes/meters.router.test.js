@@ -18,10 +18,10 @@ describe('Meters endpoint', () => {
       expect(typeof res.body[0].serial).toBe('string')
       expect(res.body[0].serial).not.toBeUndefined()
 
-      expect(typeof res.body[0].firstReadingTimestamp).toBe('string')
+      expect(typeof res.body[0].firstReadingTimestamp).toBe('number')
       expect(res.body[0].firstReadingTimestamp).not.toBeUndefined()
 
-      expect(typeof res.body[0].latestReadingTimestamp).toBe('string')
+      expect(typeof res.body[0].latestReadingTimestamp).toBe('number')
       expect(res.body[0].latestReadingTimestamp).not.toBeUndefined()
 
       expect(typeof res.body[0].firstReadingUTCDateTime).toBe('string')
