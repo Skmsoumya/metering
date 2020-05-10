@@ -1,0 +1,66 @@
+const app = require("../app")
+const http = require('http')
+
+const normalizePort = (val) => {
+  const port = parseInt(val)
+  if (isNaN(port)) {
+    // named pipe
+    return val
+  }
+
+  if (port >= 0) {
+    // port number
+    return port
+  }
+
+  return false
+}
+
+const handleError = (error) => {
+  if (error.syscall !== 'listen') {
+    throw error
+  }
+
+  const bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges')
+      process.exit(1)
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use')
+      process.exit(1)
+    default:
+      console.log('Internal Error Occurred.')
+      throw error
+  }
+}
+
+/* 
+  handle server listening event
+*/
+const handleListening = () => {
+  const addr = server.address()
+  const bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  console.log('App started on', bind)
+}
+
+const port = normalizePort(process.env.PORT || '3000')
+app.set(port)
+
+/*
+  Create the http server
+*/
+const server = http.createServer(app)
+
+/*
+  Listen on the provided port, on all network interfaces
+*/
+server.listen(port)
+server.on('error', handleError)
+server.on('listening', handleListening)
