@@ -46,6 +46,7 @@ Google App Engine
 
 ### Database:
 The database structure is as follows:
+
 | Meters COLLECTION
 
     | Meter DOCUMENT
@@ -81,6 +82,6 @@ The database structure is as follows:
                 | WH
 
                 | VARH
-                
+
                 | UTCDateTime
 
