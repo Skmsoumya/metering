@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: '0.0.3'
+  version: '0.0.4'
   title: 'The metering API'
   description: ''
 components:
@@ -86,6 +86,68 @@ paths:
                     latestWHReading:
                       type: string
                       description: The value of WH when the latest reading was recorded
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /meters/{meterId}:
+    get:
+      summary: Get the details about a meter.
+      parameters: 
+        - name: meterId
+          description: The ID of the meter whoose data has to be obtained
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Details about the meter with the specified ID
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [
+                  meterId,
+                  firstRecordedReadingDate,
+                  lastRecordedReadingDate
+                ]
+                properties:
+                  serial:
+                    type: string
+                    description: The ID of the given meter
+                  firstReadingTimestamp:
+                    type: string
+                    description: Unix timestamp representing the date and time from which reading are avaliable in the system.
+                  latestReadingTimestamp:
+                    type: string
+                    description: Unix timestamp representing the last date and time on which reading was recorded in the system. 
+                  firstReadingUTCDateTime:
+                    type: string
+                    description: UTC date time of the first recorded reading
+                  latestReadingUTCDateTime:
+                    type: string
+                    description: UTC date time string of the latest reading
+                  initialVARHReading:
+                    type: string
+                    description: The value of VARH when the first reading was recorded
+                  latestVARHReading:
+                    type: string
+                    description: The value of VARH when the latest reading was recorded
+                  initialWHReading:
+                    type: string
+                    description: The value of the WH when the first reading was recorded
+                  latestWHReading:
+                    type: string
+                    description: The value of WH when the latest reading was recorded
+        "404":
+          description: Meter with specified ID not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
         '500':
           description: Internal server error
           content:
