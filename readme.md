@@ -47,22 +47,40 @@ Google App Engine
 ### Database:
 The database structure is as follows:
 | Meters COLLECTION
+
     | Meter DOCUMENT
+
         | serial
+
         | latestWHReading
+
         | latestVARHReading
+
         | latestReadingUTCDateTime
+
         | latestReadingTimestamp
+
         | initialWHReading
+
         | initialVARHReading
+
         | firstReadingUTCDateTime
+
         | firstReadingTimestamp
+
         | Readings Collection
+
             | Reading DOCUMENT
+
                 | timestamp
+
                 | changeInWH
+
                 | changeInVARH
+
                 | WH
+
                 | VARH
+                
                 | UTCDateTime
 
