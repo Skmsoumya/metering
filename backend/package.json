@@ -4,7 +4,7 @@
   "description": "metering backend",
   "main": "bin/www",
   "scripts": {
-    "test": "jest --setupFiles dotenv/config",
+    "test": "jest --setupFiles dotenv/config --verbose",
     "start": "node ./bin/www",
     "lint": "eslint .",
     "dev_run": "nodemon --require dotenv/config --exec \"npm run lint && npm run test && node ./bin/www\""

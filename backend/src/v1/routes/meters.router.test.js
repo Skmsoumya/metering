@@ -49,7 +49,6 @@ describe('Meters endpoint', () => {
     const res = await request(app)
       .get(`/meters?searchById=${meterId}`)
       .send()
-
     expect(res.body.length).toBe(1)
     expect(res.body[0].serial).toBe(meterId)
   })
