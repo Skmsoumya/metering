@@ -8,7 +8,7 @@ app.use('/', router)
 describe('Meters endpoint', () => {
   it('Should return a list of meters', async () => {
     const res = await request(app)
-      .get('/meters')
+      .get('/')
       .send()
 
     expect(res.statusCode).toBe(200)
@@ -47,7 +47,7 @@ describe('Meters endpoint', () => {
   it('Should accept a search parameter and filter the list of meters accordingly', async () => {
     const meterId = 'METER000001'
     const res = await request(app)
-      .get(`/meters?searchById=${meterId}`)
+      .get(`/?searchById=${meterId}`)
       .send()
     expect(res.body.length).toBe(1)
     expect(res.body[0].serial).toBe(meterId)
@@ -56,7 +56,7 @@ describe('Meters endpoint', () => {
   it('Should return an empty array when there is no meter with specified ID in the system', async () => {
     const meterId = 'METER000012'
     const res = await request(app)
-      .get(`/meters?searchById=${meterId}`)
+      .get(`/?searchById=${meterId}`)
       .send()
 
     expect(res.body.length).toBe(0)
@@ -67,7 +67,7 @@ describe('Meter\'s reading endpoint', () => {
   it('should respond with a list of reading for each valid meter id', async () => {
     const meterId = 'METER000001'
     const res = await request(app)
-      .get(`/meters/${meterId}/readings`).send()
+      .get(`/${meterId}/readings`).send()
 
     expect(res.statusCode).toBe(200)
     expect(res.body).not.toBeUndefined()

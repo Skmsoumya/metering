@@ -37,6 +37,8 @@ module.exports = {
         }
 
         res.send(data)
+      }).catch((err) => {
+        next(err)
       })
     } catch (err) {
       next(err)

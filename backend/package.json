@@ -7,7 +7,7 @@
     "test": "jest --setupFiles dotenv/config --verbose",
     "start": "node ./bin/www",
     "lint": "eslint .",
-    "dev_run": "nodemon --require dotenv/config --exec \"npm run lint && npm run test && node ./bin/www\""
+    "dev_run": "nodemon --exec \"npm run lint && npm run test && node --require dotenv/config ./bin/www dotenv_config_path=.env\""
   },
   "author": "Soumya",
   "license": "ISC",
