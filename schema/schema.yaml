@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: '0.0.2'
+  version: '0.0.3'
   title: 'The metering API'
   description: ''
 components:
@@ -92,7 +92,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-  /meters/{meterId}:
+  /meters/{meterId}/readings:
     get:
       summary: Get the metering data for a meter. 
       parameters:
