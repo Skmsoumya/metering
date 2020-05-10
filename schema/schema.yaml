@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
-  version: '0.0.1'
+  version: '0.0.2'
   title: 'The metering API'
-  description: 'Schema for metering API'
+  description: ''
 components:
   schemas:
     error: 
@@ -59,16 +59,33 @@ paths:
                     lastRecordedReadingDate
                   ]
                   properties:
-                    meterId:
+                    serial:
                       type: string
                       description: The ID of the given meter
-                    firstRecordedReadingUnixTimestamp:
+                    firstReadingTimestamp:
                       type: string
                       description: Unix timestamp representing the date and time from which reading are avaliable in the system.
-                    lastRecordedReadingUnixTimestamp:
+                    latestReadingTimestamp:
                       type: string
                       description: Unix timestamp representing the last date and time on which reading was recorded in the system. 
-                    
+                    firstReadingUTCDateTime:
+                      type: string
+                      description: UTC date time of the first recorded reading
+                    latestReadingUTCDateTime:
+                      type: string
+                      description: UTC date time string of the latest reading
+                    initialVARHReading:
+                      type: string
+                      description: The value of VARH when the first reading was recorded
+                    latestVARHReading:
+                      type: string
+                      description: The value of VARH when the latest reading was recorded
+                    initialWHReading:
+                      type: string
+                      description: The value of the WH when the first reading was recorded
+                    latestWHReading:
+                      type: string
+                      description: The value of WH when the latest reading was recorded
         '500':
           description: Internal server error
           content:
