@@ -11,6 +11,19 @@ module.exports = {
       next(err)
     }
   },
+  getIndividualMetersData (req, res, next) {
+    try {
+      if (!req.params.meterId || req.params.meterId.length === 0) {
+        throw new Error('BAD-REQUEST')
+      }
+
+      getMeter(req.params.meterId).then((meterData) => {
+        res.send(meterData)
+      })
+    } catch (err) {
+      next(err)
+    }
+  },
   getMeterReadings (req, res, next) {
     try {
       if (!req.params.meterId || req.params.meterId.length === 0) {
