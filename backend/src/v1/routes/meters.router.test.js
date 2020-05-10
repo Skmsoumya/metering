@@ -63,7 +63,7 @@ describe('Meters endpoint', () => {
   })
 })
 
-describe('Meater\'s reading endpoint', () => {
+describe('Meter\'s reading endpoint', () => {
   it('should respond with a list of reading for each valid meter id', async () => {
     const meterId = 'METER000001'
     const res = await request(app)
@@ -80,27 +80,20 @@ describe('Meater\'s reading endpoint', () => {
     expect(typeof res.body.endTimestamp).toBe('number')
     expect(res.body.endTimestamp).not.toBe(0)
 
-    expect(typeof res.body.readings).toBe('array')
+    expect(Array.isArray(res.body.readings)).toBe(true)
 
     if (res.body.readings.length > 0) {
-      const aReading = res.body[0]
+      const aReading = res.body.readings[0]
       expect(aReading).not.toBeUndefined()
 
-      expect(typeof aReading.readingTimestampUnix).toBe('number')
-      expect(aReading.readingTimestampUnix).not.toBe(0)
+      expect(typeof aReading.timestamp).toBe('number')
+      expect(aReading.timestamp).not.toBe(0)
 
-      expect(typeof aReading.wattHour).toBe('number')
-      expect(typeof aReading.varh).toBe('number')
+      expect(typeof aReading.WH).toBe('number')
+      expect(typeof aReading.VARH).toBe('number')
       expect(typeof aReading.changeInVARH).toBe('number')
       expect(typeof aReading.changeInWH).toBe('number')
+      expect(typeof aReading.UTCDateTime).toBe('string')
     }
-  })
-
-  it('should respond with 404 error if meter not found on system', async () => {
-    const meterId = 'METER0000012'
-    const res = await request(app)
-      .get(`/meters/${meterId}/readings`).send()
-
-    expect(res.statusCode).toBe(404)
   })
 })

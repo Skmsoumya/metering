@@ -105,7 +105,7 @@ paths:
         - name: period
           description: The time period for which the data has to be obtained.
           in: query
-          required: true
+          required: false
           schema:
             $ref: "#/components/schemas/period"
         - name: customPeriodStartTimestamp
@@ -147,10 +147,10 @@ paths:
                   period:
                     $ref: "#/components/schemas/period"
                   startTimestamp:
-                    type: string
+                    type: number
                     description: Unix timestamp in seconds marking the start date and time from which the data is avaliable.
                   endTimestamp:
-                    type: string
+                    type: number
                     description: Unix timestamp in seconds marking the end date and time for the metering data.
                   readings:
                     type: array
@@ -158,15 +158,25 @@ paths:
                       type: object
                       description: An instance of meter reading on a given time.
                       properties:
-                        readingTimestampUnix: 
+                        timestamp: 
                           type: string
                           description: The unix timestamp in seconds representing the date and time when the reading was take.
-                        wattHour:
+                        WH:
                           type: number
                           description: The watt-hour reading from the meter.
-                        varh:
+                        VARH:
                           type: number
                           description: The VARh or Volt Ampere Hour Reactive reading from the meter. 
+                        changeInVARH:
+                          type: number
+                          description: The change in VARH recorded on that given timestamp form the previous reading
+                        changeInWH:
+                          type: number
+                          description: The change in WH recorded on that given timestamp from the previous reading
+                        UTCDateTime:
+                          type: string
+                          description: The UTC date time string of the reading
+                        
         "404":
           description: Meter with specified ID not found.
           content:
