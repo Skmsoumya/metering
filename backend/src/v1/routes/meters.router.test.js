@@ -63,6 +63,41 @@ describe('Meters endpoint', () => {
   })
 })
 
+describe('individual meter endpoint', () => {
+  it('should respond with the individual meters data for each valid meter ID', async () => {
+    const meterId = 'METER000001'
+    const res = await request(app)
+      .get(`/${meterId}`).send()
+
+    expect(res.statusCode).toBe(200)
+    expect(res.body.serial).toBe(meterId)
+
+    expect(typeof res.body.firstReadingTimestamp).toBe('number')
+    expect(res.body.firstReadingTimestamp).not.toBeUndefined()
+
+    expect(typeof res.body.latestReadingTimestamp).toBe('number')
+    expect(res.body.latestReadingTimestamp).not.toBeUndefined()
+
+    expect(typeof res.body.firstReadingUTCDateTime).toBe('string')
+    expect(res.body.firstReadingUTCDateTime).not.toBeUndefined()
+
+    expect(typeof res.body.latestReadingUTCDateTime).toBe('string')
+    expect(res.body.latestReadingUTCDateTime).not.toBeUndefined()
+
+    expect(typeof res.body.initialVARHReading).toBe('string')
+    expect(res.body.initialVARHReading).not.toBeUndefined()
+
+    expect(typeof res.body.latestVARHReading).toBe('string')
+    expect(res.body.latestVARHReading).not.toBeUndefined()
+
+    expect(typeof res.body.initialWHReading).toBe('string')
+    expect(res.body.initialWHReading).not.toBeUndefined()
+
+    expect(typeof res.body.latestWHReading).toBe('string')
+    expect(res.body.latestWHReading).not.toBeUndefined()
+  })
+})
+
 describe('Meter\'s reading endpoint', () => {
   it('should respond with a list of reading for each valid meter id', async () => {
     const meterId = 'METER000001'
