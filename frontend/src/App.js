@@ -3,6 +3,7 @@ import axios from 'axios'
 import './App.css'
 import MeterSelector from './components/MeterSelector/MeterSelector'
 import SelectedMeterDisplay from './components/SelectedMeterDisplay/SelectedMeterDisplay'
+import MeteringCharts from './components/MeteringCharts/MeteringCharts'
 import PropTypes from 'prop-types'
 
 class App extends React.Component {
@@ -20,10 +21,16 @@ class App extends React.Component {
   }
 
   fetchMeters () {
-    axios.get(this.props.urlForAllMeters).then((res) => {
+    this.setState({
+      isFetchingMeters: true,
+      meters: [],
+      errorWhileFetchingMeters: false
+    })
+    axios.get(`${this.props.apiUrl}meters/`).then((res) => {
       this.setState({
         isFetchingMeters: false,
-        meters: res.data
+        meters: res.data,
+        errorWhileFetchingMeters: false
       })
     }).catch((err) => {
       console.error(err)
@@ -71,7 +78,10 @@ class App extends React.Component {
         }
 
         { selectedMeter ? (
-          <SelectedMeterDisplay selectedMeter={selectedMeter}></SelectedMeterDisplay>
+          <div>
+            <SelectedMeterDisplay selectedMeter={selectedMeter}></SelectedMeterDisplay>
+            <MeteringCharts apiUrl={this.props.apiUrl} selectedMeter={this.state.selectedMeterSerialNo}></MeteringCharts>
+          </div>
         ) : ''}
       </div>
     )
@@ -83,7 +93,7 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  urlForAllMeters: PropTypes.string.isRequired
+  apiUrl: PropTypes.string.isRequired
 }
 
 export default App

@@ -1,7 +1,7 @@
 import React from 'react'
 import App from './App'
 import axios from 'axios'
-import { mount } from 'enzyme'
+import { mount, shallow } from 'enzyme'
 import { act } from 'react-dom/test-utils'
 
 jest.mock('axios', () => {
@@ -49,7 +49,7 @@ describe('Tests For App component', () => {
       data: meters
     }
     axios.get.mockResolvedValueOnce(mockResponse)
-    const wrapper = mount(<App urlForAllMeters={apiUrl}/>)
+    const wrapper = mount(<App apiUrl={apiUrl} />)
     expect(wrapper.exists).toBeTruthy()
     expect(wrapper.find('#loadingMessage').text()).toBe('Loading meters...')
     await act(async () => {
@@ -62,7 +62,7 @@ describe('Tests For App component', () => {
   it('If it fails to load the list of meters, it shows a error message and a button to retry loading the data', async () => {
     const mockError = new Error('Some error')
     axios.get.mockRejectedValueOnce(mockError)
-    const wrapper = mount(<App urlForAllMeters={apiUrl}/>)
+    const wrapper = mount(<App apiUrl={apiUrl} />)
     expect(wrapper.exists).toBeTruthy()
     expect(wrapper.find('#loadingMessage').text()).toBe('Loading meters...')
     await act(async () => {
@@ -71,46 +71,5 @@ describe('Tests For App component', () => {
     wrapper.update()
     expect(wrapper.find('#errorMessage').text()).toBe('Some error occurred while fetching the list of meters. Please try again.')
     expect(wrapper.find('#reloadMetersBtn').exists).toBeTruthy()
-  })
-
-  it('If a li is clicked in MeterSelector update state to contain the serial of newly selected meter', async () => {
-    const mockResponse = {
-      data: meters
-    }
-    axios.get.mockResolvedValueOnce(mockResponse)
-    const wrapper = mount(<App urlForAllMeters={apiUrl}/>)
-    expect(wrapper.exists).toBeTruthy()
-    const searchInputValue = 'METER000001'
-    expect(wrapper.find('#loadingMessage').text()).toBe('Loading meters...')
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 0))
-    })
-    wrapper.update()
-    const meterselector = wrapper.find('MeterSelector')
-    const meterli = meterselector.find('#meters').find('li').filterWhere((node) => node.text() === searchInputValue)
-    meterli.simulate('click')
-    wrapper.update()
-    expect(wrapper.state().selectedMeterSerialNo).toBe(searchInputValue)
-  })
-
-  it('If a li is clicked in MeterSelector App should have display SelectedMeter', async () => {
-    const mockResponse = {
-      data: meters
-    }
-    axios.get.mockResolvedValueOnce(mockResponse)
-    const wrapper = mount(<App urlForAllMeters={apiUrl}/>)
-    expect(wrapper.exists).toBeTruthy()
-    const searchInputValue = 'METER000001'
-    expect(wrapper.find('#loadingMessage').text()).toBe('Loading meters...')
-    expect(wrapper.find('SelectedMeterDisplay').length).toBe(0)
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 0))
-    })
-    wrapper.update()
-    const meterselector = wrapper.find('MeterSelector')
-    const meterli = meterselector.find('#meters').find('li').filterWhere((node) => node.text() === searchInputValue)
-    meterli.simulate('click')
-    wrapper.update()
-    expect(wrapper.find('SelectedMeterDisplay').length).toBe(1)
   })
 })
