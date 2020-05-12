@@ -72,4 +72,24 @@ describe('Tests For App component', () => {
     expect(wrapper.find('#errorMessage').text()).toBe('Some error occurred while fetching the list of meters. Please try again.')
     expect(wrapper.find('#reloadMetersBtn').exists).toBeTruthy()
   })
+
+  it('If a li is clicked in MeterSelector update state to contain the serial of newly selected meter', async () => {
+    const mockResponse = {
+      data: meters
+    }
+    axios.get.mockResolvedValueOnce(mockResponse)
+    const wrapper = mount(<App urlForAllMeters={apiUrl}/>)
+    expect(wrapper.exists).toBeTruthy()
+    const searchInputValue = 'METER000001'
+    expect(wrapper.find('#loadingMessage').text()).toBe('Loading meters...')
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0))
+    })
+    wrapper.update()
+    const meterselector = wrapper.find('MeterSelector')
+    const meterli = meterselector.find('#meters').find('li').filterWhere((node) => node.text() === searchInputValue)
+    meterli.simulate('click')
+    wrapper.update()
+    expect(wrapper.state().selectedMeterSerialNo).toBe(searchInputValue)
+  })
 })
