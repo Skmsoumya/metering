@@ -12,7 +12,7 @@ class MeterSelector extends React.Component {
 
   getMeters (meters) {
     return (
-      <ul>
+      <ul id='meters'>
         {
           meters.map((meter) => {
             return (
@@ -25,7 +25,7 @@ class MeterSelector extends React.Component {
   }
 
   handleChange (event) {
-    const searchValue = event.target.value
+    const searchValue = event.target.value ? event.target.value.toUpperCase() : ''
     this.setState({
       enterMeterSearchValue: searchValue
     })
@@ -37,13 +37,19 @@ class MeterSelector extends React.Component {
     })
     return (
       <div>
-        <label>Search and Select A Meter</label>
-        <input className="meterSearchInput"
+        <h2 className='title'>Search and Select A Meter</h2>
+        <input className="meterSearchInput" id='filterMetersInput'
           placeholder="Search for a meter by meter ID"
           type="text"
           value={this.state.enterMeterSearchValue}
           onChange={this.handleChange} />
-        {this.getMeters(filteredMetersList)}
+        {
+          filteredMetersList && filteredMetersList.length ? this.getMeters(filteredMetersList) : (
+            <h4 id='noMetersFoundMessage'>
+              No Meters Found
+            </h4>
+          )
+        }
       </div>
     )
   }
