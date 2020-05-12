@@ -1,66 +1,72 @@
-import React from 'react';
-import axios from 'axios';
-import './App.css';
-import MeterSelector from './components/MeterSelector';
+import React from 'react'
+import axios from 'axios'
+import './App.css'
+import MeterSelector from './components/MeterSelector'
 
 class App extends React.Component {
-  state = {
-    isFetchingMeters: false,
-    meters: [],
-    error: false,
-    selectedMeterSerialNo: null
-  }
-
-  constructor(props) {
+  constructor (props) {
     super(props)
+
+    this.state = {
+      isFetchingMeters: false,
+      meters: [],
+      error: false,
+      errorMessage: '',
+      selectedMeterSerialNo: null
+    }
+
     this.handleMeterClick = this.handleMeterClick.bind(this)
   }
-  
-  fetchMeters() {
+
+  fetchMeters () {
     this.setState({
       isFetchingMeters: true
     })
-    axios.get('https://metering-assignment.uc.r.appspot.com/api/v1/meters/').then((res) => {
+
+    axios.get(process.env.REACT_APP_METERING_API_URL).then((res) => {
       this.setState({
         isFetchingMeters: false,
         meters: res.data
       })
     }).catch((err) => {
+      console.error(err)
+
       this.setState({
+        errorMessage: 'Some error occurred while loading the list of meters. Please try again.',
         error: true,
         isFetchingMeters: false
       })
     })
   }
 
-  handleMeterClick(meterSerialNo) {
+  handleMeterClick (meterSerialNo) {
     this.setState({
       selectedMeterSerialNo: meterSerialNo
     })
   }
 
-  render() {
+  render () {
     const selectedMeter = this.state.meters.filter((meter) => {
-      return meter.serial === this.state.selectedMeterSerialNo;
+      return meter.serial === this.state.selectedMeterSerialNo
     })[0]
 
     return (
       <div className="App">
         <MeterSelector meters={this.state.meters} handleMeterClick={this.handleMeterClick}></MeterSelector>
-        
+
         { selectedMeter ? (
           <div>
             <label>Selected Meter:</label>
             <h2>Serial No: {selectedMeter.serial}</h2>
           </div>
-        ) : ""}
+        ) : ''}
       </div>
-    );
+    )
   }
 
-  componentDidMount() {
-    this.fetchMeters();
+  componentDidMount () {
+    this.fetchMeters()
   }
 }
 
-export default App;
+export default App
