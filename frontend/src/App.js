@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import './App.css'
-import MeterSelector from './components/MeterSelector'
+import MeterSelector from './components/MeterSelector/MeterSelector'
 import PropTypes from 'prop-types'
 
 class App extends React.Component {
