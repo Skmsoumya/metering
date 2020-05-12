@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import './App.css'
 import MeterSelector from './components/MeterSelector'
+import PropTypes from 'prop-types'
 
 class App extends React.Component {
   constructor (props) {
@@ -23,7 +24,7 @@ class App extends React.Component {
       isFetchingMeters: true
     })
 
-    axios.get(process.env.REACT_APP_METERING_API_URL).then((res) => {
+    axios.get().then((res) => {
       this.setState({
         isFetchingMeters: false,
         meters: res.data
@@ -67,6 +68,10 @@ class App extends React.Component {
   componentDidMount () {
     this.fetchMeters()
   }
+}
+
+App.propTypes = {
+  urlForAllMeters: PropTypes.string.isRequired
 }
 
 export default App
