@@ -92,4 +92,25 @@ describe('Tests For App component', () => {
     wrapper.update()
     expect(wrapper.state().selectedMeterSerialNo).toBe(searchInputValue)
   })
+
+  it('If a li is clicked in MeterSelector App should have display SelectedMeter', async () => {
+    const mockResponse = {
+      data: meters
+    }
+    axios.get.mockResolvedValueOnce(mockResponse)
+    const wrapper = mount(<App urlForAllMeters={apiUrl}/>)
+    expect(wrapper.exists).toBeTruthy()
+    const searchInputValue = 'METER000001'
+    expect(wrapper.find('#loadingMessage').text()).toBe('Loading meters...')
+    expect(wrapper.find('SelectedMeterDisplay').length).toBe(0)
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0))
+    })
+    wrapper.update()
+    const meterselector = wrapper.find('MeterSelector')
+    const meterli = meterselector.find('#meters').find('li').filterWhere((node) => node.text() === searchInputValue)
+    meterli.simulate('click')
+    wrapper.update()
+    expect(wrapper.find('SelectedMeterDisplay').length).toBe(1)
+  })
 })

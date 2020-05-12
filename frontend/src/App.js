@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import './App.css'
 import MeterSelector from './components/MeterSelector/MeterSelector'
+import SelectedMeterDisplay from './components/SelectedMeterDisplay/SelectedMeterDisplay'
 import PropTypes from 'prop-types'
 
 class App extends React.Component {
@@ -70,10 +71,7 @@ class App extends React.Component {
         }
 
         { selectedMeter ? (
-          <div>
-            <label>Selected Meter:</label>
-            <h2>Serial No: {selectedMeter.serial}</h2>
-          </div>
+          <SelectedMeterDisplay selectedMeter={selectedMeter}></SelectedMeterDisplay>
         ) : ''}
       </div>
     )
