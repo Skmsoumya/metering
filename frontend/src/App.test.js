@@ -1,6 +1,6 @@
 import React from 'react'
 import App from './App'
-import axios from "axios"
+import axios from 'axios'
 import { mount } from 'enzyme'
 import { act } from 'react-dom/test-utils'
 
@@ -69,7 +69,7 @@ describe('Tests For App component', () => {
       await new Promise((resolve) => setTimeout(resolve, 0))
     })
     wrapper.update()
-    expect(wrapper.find('#errorMessage').text()).toBe('Some error occurred while fetching the list of meters. Please tyr again.')
+    expect(wrapper.find('#errorMessage').text()).toBe('Some error occurred while fetching the list of meters. Please try again.')
     expect(wrapper.find('#reloadMetersBtn').exists).toBeTruthy()
   })
 })

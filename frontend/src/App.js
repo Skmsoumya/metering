@@ -9,10 +9,9 @@ class App extends React.Component {
     super(props)
 
     this.state = {
-      isFetchingMeters: false,
+      isFetchingMeters: true,
       meters: [],
-      error: false,
-      errorMessage: '',
+      errorWhileFetchingMeters: false,
       selectedMeterSerialNo: null
     }
 
@@ -20,11 +19,7 @@ class App extends React.Component {
   }
 
   fetchMeters () {
-    this.setState({
-      isFetchingMeters: true
-    })
-
-    axios.get().then((res) => {
+    axios.get(this.props.urlForAllMeters).then((res) => {
       this.setState({
         isFetchingMeters: false,
         meters: res.data
@@ -33,8 +28,7 @@ class App extends React.Component {
       console.error(err)
 
       this.setState({
-        errorMessage: 'Some error occurred while loading the list of meters. Please try again.',
-        error: true,
+        errorWhileFetchingMeters: true,
         isFetchingMeters: false
       })
     })
@@ -53,7 +47,27 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <MeterSelector meters={this.state.meters} handleMeterClick={this.handleMeterClick}></MeterSelector>
+
+        {
+          this.state.isFetchingMeters && (
+            <h2 id='loadingMessage'>Loading meters...</h2>
+          )
+        }
+
+        {
+          this.state.errorWhileFetchingMeters && (
+            <div>
+              <h3 id='errorMessage'>Some error occurred while fetching the list of meters. Please try again.</h3>
+              <button id='reloadMetersBtn'>Try again</button>
+            </div>
+          )
+        }
+
+        {
+          this.state.meters && !this.state.isFetchingMeters && (
+            <MeterSelector meters={this.state.meters} handleMeterClick={this.handleMeterClick}></MeterSelector>
+          )
+        }
 
         { selectedMeter ? (
           <div>
