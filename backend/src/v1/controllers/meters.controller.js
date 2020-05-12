@@ -29,23 +29,23 @@ module.exports = {
       if (!req.params.meterId || req.params.meterId.length === 0) {
         throw new Error('BAD-REQUEST')
       }
-      const period = 'last_month'
-      const currentDate = new Date()
-      const currentTimestamp = Math.round((currentDate).getTime() / 1000)
-      const lastMonthDate = new Date()
-      lastMonthDate.setMonth(lastMonthDate.getMonth() - 1)
-      const lastMonthTimestamp = Math.round((lastMonthDate).getTime() / 1000)
+      const period = 'all'
+      // const currentDate = new Date()
+      // const currentTimestamp = Math.round((currentDate).getTime() / 1000)
+      // const lastMonthDate = new Date()
+      // lastMonthDate.setMonth(lastMonthDate.getMonth() - 1)
+      // const lastMonthTimestamp = Math.round((lastMonthDate).getTime() / 1000)
 
       getMeter(req.params.meterId).then((meterData) => {
-        return getMeterReading(req.params.meterId, lastMonthTimestamp, currentTimestamp).then((readings) => {
+        return getMeterReading(req.params.meterId).then((readings) => {
           return { meterData, readings: readings }
         })
       }).then((combinedData) => {
         const data = {
           meterId: combinedData.meterData.serial,
           period: period,
-          startTimestamp: lastMonthTimestamp,
-          endTimestamp: currentTimestamp,
+          startTimestamp: combinedData.readings[0].timestamp,
+          endTimestamp: combinedData.readings[combinedData.readings.length - 1].timestamp,
           readings: combinedData.readings
         }
 

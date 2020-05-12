@@ -26,8 +26,9 @@ components:
               type: string  
     period:
       type: string
-      default: last_month
+      default: all
       enum:
+        - all
         - last_month
         - last_week
         - last_two_Weeks
